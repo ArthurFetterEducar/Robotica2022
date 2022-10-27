@@ -1,2 +1,2 @@
 # Robotica2022
-Esse repositório contém todos os codigos utilizados por mim nas aulas de robótica durante o ano de 2022.
+Códigos referentes aos projetos elaborados para as aulas de robótica do curso de Eletrônica integrado ao Ensino médio no ano de 2022.  
