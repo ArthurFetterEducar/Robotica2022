@@ -43,6 +43,9 @@ Keypad teclado = Keypad( makeKeymap(keys), rowPins, colPins, TOTAL_LINHAS, TOTAL
 #define POT_PIN     A8
 #define OUTPUT_PIN  2
 
+char key;
+String cmd = "";
+
 float pot_v;
 int duty_cycle;
 long freq = 10000;
@@ -60,22 +63,64 @@ void setup() {
 
 
 void loop() {
-  char cmd = teclado.getKey();
+  key = teclado.getKey();
+  Serial.println(key);
   
-  if (cmd == '1') {
-    freq++;
-    Serial.println(freq);
-    Timer3.setPeriod((1.0/freq)*1000000);
-  }
-  else if (cmd == '2') {
-    freq--;
-    Timer3.setPeriod((1.0/freq)*1000000);
-  }
-         
-  pot_v = analogRead(POT_PIN);
-  duty_cycle = map(pot_v, 8, 1023, 0, 100);
+  if (key != NO_KEY) {
+    cmd = cmd + key;
+    
+    switch (key) {
+    case 'A':
+    {
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat();
+      Serial.println(freq);
+      break;
+    }
+    case 'B': 
+    {
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat() * 100;
+      Serial.println(freq);
+      break;
+    }
+    case 'C': 
+    {
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat() * 1000;
+      Serial.println(freq);
+      break;
+    }
+    case 'D': 
+    {
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat() * 10000;
+      Serial.println(freq);
+      break;
+    }
+    case '*': 
+    {
+      cmd = "";
 
-  lcd.setCursor(0, 0);
+      lcd.setCursor(0, 0);
+      lcd.print("0");
+
+      break;
+    }
+    case '#':
+    {
+      Timer3.setPeriod((1.0/freq)*1000000);
+
+      cmd = "";
+
+      lcd.setCursor(0, 0);
+      lcd.print(" ");
+
+      break;
+    }
+    }
+  }
+
+  pot_v = analogRead(POT_PIN);
+  duty_cycle = map(pot_v, 8, 1024, 0, 100);
+
+  lcd.setCursor(1, 0);
   lcd.print("Freq:");
   lcd.print(freq);
   lcd.print("Hz");
