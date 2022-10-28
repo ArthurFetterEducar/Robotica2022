@@ -44,7 +44,7 @@ Keypad teclado = Keypad( makeKeymap(keys), rowPins, colPins, TOTAL_LINHAS, TOTAL
 #define OUTPUT_PIN  2
 
 char key;
-char cmd = "";
+String cmd = "";
 
 float pot_v;
 int duty_cycle;
@@ -64,29 +64,34 @@ void setup() {
 
 void loop() {
   key = teclado.getKey();
+  Serial.println(key);
   
   if (key != NO_KEY) {
     cmd = cmd + key;
     
-    switch (cmd) {
+    switch (key) {
     case 'A':
     {
-      freq = cmd.substring(0, equation.indexOf('A')).toFloat();
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat();
+      Serial.println(freq);
       break;
     }
     case 'B': 
     {
-      freq = cmd.substring(0, equation.indexOf('A')).toFloat() * 100;
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat() * 100;
+      Serial.println(freq);
       break;
     }
     case 'C': 
     {
-      freq = cmd.substring(0, equation.indexOf('A')).toFloat() * 1000;
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat() * 1000;
+      Serial.println(freq);
       break;
     }
     case 'D': 
     {
-      freq = cmd.substring(0, equation.indexOf('A')).toFloat() * 10000;
+      freq = cmd.substring(0, cmd.indexOf('A')).toFloat() * 10000;
+      Serial.println(freq);
       break;
     }
     case '*': 
@@ -100,7 +105,9 @@ void loop() {
     }
     case '#':
     {
-      Timer3.setPeriod(freq);
+      Timer3.setPeriod((1.0/freq)*1000000);
+
+      cmd = "";
 
       lcd.setCursor(0, 0);
       lcd.print(" ");
